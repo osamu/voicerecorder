@@ -27,7 +27,7 @@
 | 項目 | 確定仕様 | 上書きされた当初仕様 |
 |---|---|---|
 | 文字起こし | **録音後の非同期 STT が既定**（クラウド STT: Whisper API 等のバッチエンジン）。録音は `record` 単独で完結。リアルタイム表示は将来オプションへ格下げ | 録音中に OS 標準エンジンでリアルタイム逐次変換（B1: 両OSで技術的に不成立） |
-| Drive スコープ | **`drive.file` ＋ アプリ自作ルートフォルダ `/VoiceRecorder/` 配下のみ管理**。任意既存フォルダ指定は不可。日付サブフォルダ（年/年-月）はルート配下に生成 | フルアクセス `drive` スコープ＋任意フォルダピッカー（B3: CASA 審査必須） |
+| Drive スコープ | **`drive.file` ＋ アプリ自作ルートフォルダ `/CloudRecorder/` 配下のみ管理**。任意既存フォルダ指定は不可。日付サブフォルダ（年/年-月）はルート配下に生成 | フルアクセス `drive` スコープ＋任意フォルダピッカー（B3: CASA 審査必須） |
 | 音声フォーマット | **iOS: AAC `.m4a`（モノラル 32kbps）／ Android: Ogg Opus（`.opus`）。非統一を許容**。`minSdkVersion 29`。将来 libopus FFI で `.opus` 統一 | 両OS共通 `.opus`（B4: iOS 標準 API で Ogg Opus 生成不可、ffmpeg-kit EOL） |
 | 同意・プライバシ | **最小限（個人利用割り切り）**。同意ダイアログ・ポリシー URL 等はストア公開時に別途対応 | — |
 
@@ -80,7 +80,7 @@ lib/
   features/
     recording/             # 録音: data(record) / domain(RecordingService, 保全) / presentation
     recordings_list/       # 一覧＋バッジ（drift リアクティブクエリ）, 再生, 改名, 削除
-    upload/                # UploadQueue, UploadWorker, フォルダ管理(/VoiceRecorder/)
+    upload/                # UploadQueue, UploadWorker, フォルダ管理(/CloudRecorder/)
     transcription/         # 抽象IF, engines/(cloud_stt ほか), TranscriptionService, Registry
     auth/                  # google_sign_in, トークン管理, revoke
     settings/              # 設定画面
@@ -155,7 +155,7 @@ UNIQUE 制約: `(recordingId, kind)` — 同一録音・同一種別のジョブ
 
 ### 5.4 `settings`（key-value）
 
-`driveRootFolderId`（自作 `/VoiceRecorder/` の fileId）、`transcriptionEnabled`、`transcriptionEngineId`、`transcriptionLocaleId` 等。※ OAuth トークンはここに置かず flutter_secure_storage（§9）。
+`driveRootFolderId`（自作 `/CloudRecorder/` の fileId）、`transcriptionEnabled`、`transcriptionEngineId`、`transcriptionLocaleId` 等。※ OAuth トークンはここに置かず flutter_secure_storage（§9）。
 
 ---
 
@@ -199,8 +199,8 @@ UNIQUE 制約: `(recordingId, kind)` — 同一録音・同一種別のジョブ
 ### 7.1 スコープとフォルダ管理
 
 - OAuth スコープは **`drive.file` のみ**（アプリが作成したファイル/フォルダのみアクセス可。CASA 審査不要）。
-- 初回サインイン後、アプリが Drive ルート直下に **`/VoiceRecorder/`** フォルダを作成し、fileId を `settings.driveRootFolderId` に保存。**任意の既存フォルダ指定は不可**。
-- 日付サブフォルダは `/VoiceRecorder/<年>/<年-月>/`（例 `/VoiceRecorder/2026/2026-07/`）をアップロード時に必要に応じ作成（get-or-create、フォルダも appProperties にパスキーを付与して検索可能にする）。
+- 初回サインイン後、アプリが Drive ルート直下に **`/CloudRecorder/`** フォルダを作成し、fileId を `settings.driveRootFolderId` に保存。**任意の既存フォルダ指定は不可**。
+- 日付サブフォルダは `/CloudRecorder/<年>/<年-月>/`（例 `/CloudRecorder/2026/2026-07/`）をアップロード時に必要に応じ作成（get-or-create、フォルダも appProperties にパスキーを付与して検索可能にする）。
 - 基準は**録音開始時点の端末ローカル時刻**（アップロード時刻ではない）。
 - ルートフォルダがユーザーにより削除/trashed されていた場合は permanent-failed（§7.5）とし、再作成の導線を出す。
 
@@ -218,7 +218,7 @@ UNIQUE 制約: `(recordingId, kind)` — 同一録音・同一種別のジョブ
 
 ### 7.4 後段 Workflow 契約
 
-- Workflow は `/VoiceRecorder/` を**フォルダ ID で監視**する。
+- Workflow は `/CloudRecorder/` を**フォルダ ID で監視**する。
 - **`.txt` の到着は保証しない**。Workflow は音声ファイル（`.m4a`/`.opus`）をトリガーとし、`.txt` は任意添付。
 - 音声と txt のペアリングは**ファイル名でなく appProperties の不変 ID（`vrId`）**で行う。
 - 再文字起こし時の Drive txt は同名上書き（fileId 維持の update）。
@@ -444,7 +444,7 @@ class TranscriptionService {
 ### 10.6 設定画面
 
 - Google アカウント連携（サインイン / サインアウト。サインアウト時は未アップ警告）
-- Drive 保存先の表示（`/VoiceRecorder/` 固定。フォルダを開くリンクのみ）
+- Drive 保存先の表示（`/CloudRecorder/` 固定。フォルダを開くリンクのみ）
 - 文字起こし ON/OFF ・エンジン（MVP はクラウド STT のみ）・言語（エンジン照会で構築）・API キー入力
 - ストレージ: 使用量表示・アップ済みローカルファイルの手動一括削除
 
@@ -456,7 +456,7 @@ class TranscriptionService {
 - ファイル名: `YYYY-MM-DD_HH-mm-ss[_タイトル].<ext>`（**秒まで**含む）。例: `2026-07-04_14-30-05_経営会議.m4a`（iOS）/ `.opus`（Android）。txt は同名 `.txt`。
 - タイトル部: ユーザー入力をサニタイズ（`/ \ : * ? " < > |` と制御文字を除去、長さ上限 80 文字）。
 - **改名はタイトル部のみ**変更可能。日時プレフィックスは不変。音声と `.txt` は**ペアで改名**し、Drive 反映は fileId 基準の update。
-- Drive フォルダ: `/VoiceRecorder/<YYYY>/<YYYY-MM>/`（録音開始時刻基準の月次サブフォルダ）。
+- Drive フォルダ: `/CloudRecorder/<YYYY>/<YYYY-MM>/`（録音開始時刻基準の月次サブフォルダ）。
 
 ---
 

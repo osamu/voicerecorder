@@ -82,8 +82,8 @@ void main() {
       expect(Naming.driveFolderSegments(started), ['2026', '2026-07']);
     });
 
-    test('パスキーは VoiceRecorder 起点', () {
-      expect(Naming.driveFolderPathKey(started), 'VoiceRecorder/2026/2026-07');
+    test('パスキーは CloudRecorder 起点', () {
+      expect(Naming.driveFolderPathKey(started), 'CloudRecorder/2026/2026-07');
     });
   });
 }

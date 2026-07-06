@@ -36,7 +36,7 @@ class SettingsDao extends DatabaseAccessor<AppDatabase>
 
 /// settings のキー定数（§5.4）。
 abstract final class SettingsKeys {
-  /// 自作 /VoiceRecorder/ ルートフォルダの Drive fileId。
+  /// 自作 /CloudRecorder/ ルートフォルダの Drive fileId。
   static const String driveRootFolderId = 'driveRootFolderId';
 
   /// 文字起こし ON/OFF（'true' / 'false'）。

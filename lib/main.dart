@@ -5,7 +5,7 @@ import 'app/app.dart';
 import 'app/bootstrap.dart';
 
 // アプリのルート Widget を再エクスポート（エントリポイント経由での参照用）。
-export 'app/app.dart' show VoiceRecorderApp;
+export 'app/app.dart' show CloudRecorderApp;
 
 Future<void> main() async {
   // 起動シーケンス（DB オープン → リカバリ → キュー/ジョブ再開）を実行し、
@@ -14,7 +14,7 @@ Future<void> main() async {
   runApp(
     UncontrolledProviderScope(
       container: container,
-      child: const VoiceRecorderApp(),
+      child: const CloudRecorderApp(),
     ),
   );
 }

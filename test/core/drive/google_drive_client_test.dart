@@ -57,7 +57,7 @@ void main() {
         if (call.method == 'GET') {
           return json({
             'files': [
-              {'id': 'root-1', 'name': 'VoiceRecorder'}
+              {'id': 'root-1', 'name': 'CloudRecorder'}
             ]
           });
         }
@@ -159,7 +159,7 @@ void main() {
           jsonDecode(creates.last.request.body) as Map<String, dynamic>;
       expect((monthBody['parents'] as List).first, 'year-1');
       expect((monthBody['appProperties'] as Map)['vrFolderPath'],
-          'VoiceRecorder/2026/2026-07');
+          'CloudRecorder/2026/2026-07');
     });
   });
 

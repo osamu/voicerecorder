@@ -14,7 +14,7 @@ import 'drive_http.dart';
 /// [DriveClient] の googleapis Drive v3（REST 直叩き）実装。
 ///
 /// 設計上の不変条件（DESIGN.md §7）:
-/// - スコープは `drive.file` のみ。アプリ自作 `/VoiceRecorder/` 配下のみ扱う。
+/// - スコープは `drive.file` のみ。アプリ自作 `/CloudRecorder/` 配下のみ扱う。
 /// - フォルダ/ファイルは常に fileId 基準で操作し、冪等化は appProperties
 ///   （`vrId` / `vrKind` / `vrFolderPath`）で行う。
 /// - resumable upload はセッション URI を再利用し、中断後は現在オフセットを

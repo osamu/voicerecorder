@@ -152,7 +152,7 @@ class _DriveSection extends StatelessWidget {
         _SectionHeader('Drive 保存先'),
         ListTile(
           leading: Icon(Icons.folder_outlined),
-          title: Text('/VoiceRecorder/'),
+          title: Text('/CloudRecorder/'),
           subtitle: Text('保存先は固定です。年/月のサブフォルダに自動整理されます。'),
         ),
       ],

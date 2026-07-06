@@ -5,17 +5,17 @@ import 'dart:io';
 /// 実装は googleapis Drive v3 ラッパ（別担当）。本ファイルは契約のみを定義する。
 ///
 /// 設計上の不変条件:
-/// - スコープは `drive.file` のみ。アプリ自作 `/VoiceRecorder/` 配下のみ扱う。
+/// - スコープは `drive.file` のみ。アプリ自作 `/CloudRecorder/` 配下のみ扱う。
 /// - すべての操作は fileId 基準。冪等化は appProperties の `vrId`（UUID）で行う。
 /// - 一時エラー（[DriveTransientException]）と恒久エラー（[DriveAuthException] /
 ///   [DriveFolderMissingException] / [DriveQuotaException]）を型で区別する。
 abstract interface class DriveClient {
-  /// `/VoiceRecorder/` ルートフォルダを取得（無ければ作成）し fileId を返す。
+  /// `/CloudRecorder/` ルートフォルダを取得（無ければ作成）し fileId を返す。
   /// 既存が trashed の場合は [DriveFolderMissingException] を投げてよい。
   Future<String> ensureRootFolder();
 
   /// 録音開始時刻に対応する日付サブフォルダ
-  /// `/VoiceRecorder/<YYYY>/<YYYY-MM>/` を get-or-create し fileId を返す。
+  /// `/CloudRecorder/<YYYY>/<YYYY-MM>/` を get-or-create し fileId を返す。
   Future<String> ensureDateFolder(DateTime startedAt);
 
   /// resumable アップロードのセッションを開始し、再開用の session URI を返す。

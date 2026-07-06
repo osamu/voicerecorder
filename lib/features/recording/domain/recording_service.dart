@@ -169,7 +169,7 @@ class RecordingService {
     await _beginRecorder(startedAt: startedAt);
 
     await _foreground.startRecordingNotification(
-      title: cleanTitle.isEmpty ? 'ボイスレコーダ' : cleanTitle,
+      title: cleanTitle.isEmpty ? 'CloudRecorder' : cleanTitle,
     );
 
     _updateRuntime(
@@ -361,7 +361,7 @@ class RecordingService {
       await _beginRecorder(startedAt: resumedAt);
 
       await _foreground.startRecordingNotification(
-        title: _currentTitle.isEmpty ? 'ボイスレコーダ' : _currentTitle,
+        title: _currentTitle.isEmpty ? 'CloudRecorder' : _currentTitle,
       );
 
       _updateRuntime(

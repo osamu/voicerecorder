@@ -56,7 +56,7 @@ abstract final class AppConstants {
   // -------------------------------------------------------------------------
 
   /// アプリ自作ルートフォルダ名。
-  static const String driveRootFolderName = 'VoiceRecorder';
+  static const String driveRootFolderName = 'CloudRecorder';
 
   /// Drive appProperties の UUID キー（冪等化）。
   static const String drivePropVrId = 'vrId';

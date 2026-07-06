@@ -71,7 +71,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               Icon(Icons.mic, size: 88, color: scheme.primary),
               const SizedBox(height: 24),
               Text(
-                'ボイスレコーダへようこそ',
+                'CloudRecorder へようこそ',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),

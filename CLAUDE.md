@@ -2,7 +2,7 @@
 
 ## プロジェクト概要
 
-「どんな会議でも、録音すれば自動でクラウド（Google Drive）へ上がるボイスレコーダ」の Flutter アプリ（iOS + Android）。録音停止と同時に音声ファイルを Drive のアプリ管理フォルダ `/VoiceRecorder/` 配下へ自動アップロードし、録音後にクラウド STT で非同期文字起こしした `.txt` を別ファイルとしてアップする。Drive をトリガーにした後段 Workflow（要約・議事録・タスク抽出）への接続が最終目的。現在はグリーンフィールド（Flutter プロジェクト未生成）。
+「どんな会議でも、録音すれば自動でクラウド（Google Drive）へ上がるボイスレコーダ」の Flutter アプリ（iOS + Android）。録音停止と同時に音声ファイルを Drive のアプリ管理フォルダ `/CloudRecorder/` 配下へ自動アップロードし、録音後にクラウド STT で非同期文字起こしした `.txt` を別ファイルとしてアップする。Drive をトリガーにした後段 Workflow（要約・議事録・タスク抽出）への接続が最終目的。現在はグリーンフィールド（Flutter プロジェクト未生成）。
 
 ## 技術スタック
 
@@ -45,7 +45,7 @@ lib/
 1. **状態の single source of truth は DB（drift）**。アップ状態・文字起こし状態はジョブテーブルが正。UI は drift の watch を StreamProvider で購読。メモリ状態を正としない。
 2. **ドメイン層は Riverpod 非依存**。BG isolate（workmanager / foreground_task）からはドメイン層＋DB を直接使う。
 3. **STT 抽象化**: 出力は `TranscriptionEvent` ストリームで統一、入力は `StreamingTranscriptionEngine` / `BatchTranscriptionEngine` に分離。単一 IF に統合しない。ジョブ（jobHandle）は DB 永続化し起動時に再購読。
-4. **Drive は `drive.file` スコープ＋アプリ自作 `/VoiceRecorder/` 配下のみ**。任意既存フォルダは扱わない。Drive 操作（改名・削除・txt 紐付け）は常に fileId 基準、appProperties の UUID で冪等化。
+4. **Drive は `drive.file` スコープ＋アプリ自作 `/CloudRecorder/` 配下のみ**。任意既存フォルダは扱わない。Drive 操作（改名・削除・txt 紐付け）は常に fileId 基準、appProperties の UUID で冪等化。
 5. **音声フォーマット非統一を許容**（iOS `.m4a` / Android `.opus`）。ffmpeg での変換はしない（ffmpeg-kit は EOL）。
 6. **録音優先／文字起こしベストエフォート**。文字起こしの失敗が音声アップロードを妨げてはならない。録音自体はサインイン不要で常に可能。
 7. **未アップロード録音を自動削除しない**。逼迫時削除はアップ済み・古い順のみ。

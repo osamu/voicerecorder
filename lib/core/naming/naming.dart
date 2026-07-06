@@ -67,14 +67,14 @@ abstract final class Naming {
   }
 
   /// Drive の日付サブフォルダ階層（例 `['2026', '2026-07']`）。
-  /// `/VoiceRecorder/<YYYY>/<YYYY-MM>/` の各セグメント。
+  /// `/CloudRecorder/<YYYY>/<YYYY-MM>/` の各セグメント。
   static List<String> driveFolderSegments(DateTime startedAt) {
     final y = startedAt.year.toString().padLeft(4, '0');
     final mo = startedAt.month.toString().padLeft(2, '0');
     return [y, '$y-$mo'];
   }
 
-  /// フォルダ検索・appProperties 用のパスキー（例 `VoiceRecorder/2026/2026-07`）。
+  /// フォルダ検索・appProperties 用のパスキー（例 `CloudRecorder/2026/2026-07`）。
   static String driveFolderPathKey(DateTime startedAt) {
     return [AppConstants.driveRootFolderName, ...driveFolderSegments(startedAt)]
         .join('/');

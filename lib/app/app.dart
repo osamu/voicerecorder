@@ -8,13 +8,13 @@ import 'router.dart';
 import 'theme.dart';
 
 /// アプリのルート Widget。日本語 UI・Material 3・ライト/ダーク対応。
-class VoiceRecorderApp extends StatelessWidget {
-  const VoiceRecorderApp({super.key});
+class CloudRecorderApp extends StatelessWidget {
+  const CloudRecorderApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ボイスレコーダ',
+      title: 'CloudRecorder',
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       onGenerateRoute: AppRouter.onGenerateRoute,
