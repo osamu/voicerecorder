@@ -54,8 +54,11 @@ class AudioSessionManager {
     await session.configure(
       AudioSessionConfiguration(
         avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
+        // defaultToSpeaker: playAndRecord の既定出力は受話口のため、
+        // 再生時に本体スピーカーへ出す（イヤホン・Bluetooth 接続時はそちらが優先）
         avAudioSessionCategoryOptions:
-            AVAudioSessionCategoryOptions.allowBluetooth,
+            AVAudioSessionCategoryOptions.allowBluetooth |
+                AVAudioSessionCategoryOptions.defaultToSpeaker,
         avAudioSessionMode: AVAudioSessionMode.spokenAudio,
         androidAudioAttributes: const AndroidAudioAttributes(
           contentType: AndroidAudioContentType.speech,
